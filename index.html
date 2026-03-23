@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#0F0900">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ChefSense">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<title>ChefSense AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0F0900;--bg2:#1A0F00;--bg3:#231500;--bg4:#2E1C00;--sf:#1F1200;--sf2:#2A1A00;--ac:#E8642A;--ac2:#F59240;--ac3:#FFC87A;--tx:#F5EDD8;--tx2:#C4AF8A;--tx3:#8A7558;--bd:rgba(232,100,42,0.15);--bd2:rgba(232,100,42,0.3);--red:#E84242;--grn:#42C47A;--r:14px;--rs:8px;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif}
+#app{display:flex;flex-direction:column;height:100%;padding-top:var(--st)}
+.sc{display:none;flex:1;overflow-y:auto;padding-bottom:calc(80px + var(--sb))}
+.sc.on{display:block}
+nav{position:fixed;bottom:0;left:0;right:0;background:rgba(15,9,0,0.96);backdrop-filter:blur(20px);border-top:.5px solid var(--bd);display:flex;justify-content:space-around;align-items:center;padding:10px 0 calc(10px + var(--sb));z-index:100}
+.nb{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;color:var(--tx3);cursor:pointer;padding:6px 16px;min-width:60px}
+.nb.on{color:var(--ac)}
+.nb svg{width:22px;height:22px}
+.nb span{font-size:10px;font-weight:500;letter-spacing:.03em}
+.ph{padding:28px 20px 16px}
+.ph h1{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300}
+.ph p{font-size:13px;color:var(--tx3);margin-top:4px}
+.bd{display:flex;align-items:baseline;gap:8px}
+.bdt{width:8px;height:8px;border-radius:50%;background:var(--ac);display:inline-block}
+.hc{background:linear-gradient(135deg,var(--bg3),var(--bg4));border:.5px solid var(--bd2);border-radius:var(--r);padding:24px;margin:0 20px}
+.hc h2{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;line-height:1.2;margin-bottom:8px}
+.hc p{font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:20px}
+.bp{display:inline-flex;align-items:center;gap:8px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);padding:12px 20px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer}
+.bp:active{opacity:.85}
+.bs{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--ac);border:.5px solid var(--bd2);border-radius:var(--rs);padding:11px 20px;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer}
+.bs:active{background:var(--sf)}
+.stit{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);margin-bottom:12px}
+.sr{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:16px 20px}
+.sc2{background:var(--sf);border:.5px solid var(--bd);border-radius:var(--rs);padding:12px;text-align:center}
+.sn{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--ac2)}
+.sl{font-size:10px;color:var(--tx3);margin-top:2px}
+.qg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qc{background:var(--sf);border:.5px solid var(--bd);border-radius:var(--r);padding:16px;cursor:pointer}
+.qc:active{background:var(--sf2)}
+.qi{font-size:22px;margin-bottom:10px}
+.qt{font-size:13px;font-weight:500;color:var(--tx);margin-bottom:2px}
+.qs{font-size:11px;color:var(--tx3)}
+.cf{background:var(--sf);border:1px dashed var(--bd2);border-radius:var(--r);min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px;position:relative;overflow:hidden;cursor:pointer}
+.cf video,.cf canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:var(--r);display:none}
+.cf.on video{display:block}
+.ci svg{width:44px;height:44px;color:var(--tx3)}
+.ch{font-size:13px;color:var(--tx3)}
+.ch strong{color:var(--ac2)}
+.cc{display:flex;gap:10px;margin-top:10px}
+.cc .bp,.cc .bs{flex:1;justify-content:center}
+.ii{width:100%;background:var(--sf);border:.5px solid var(--bd);border-radius:var(--rs);padding:12px 14px;color:var(--tx);font-family:'DM Sans',sans-serif;font-size:14px;resize:none;outline:none;min-height:80px}
+.ii:focus{border-color:var(--bd2)}
+.ii::placeholder{color:var(--tx3)}
+.dtg{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.tg{background:var(--sf2);border:.5px solid var(--bd2);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--ac2);display:flex;align-items:center;gap:6px}
+.tx{cursor:pointer;color:var(--tx3)}
+.pc{background:var(--sf);border:.5px solid var(--bd);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--tx2);cursor:pointer}
+.pc.on{background:rgba(232,100,42,.15);border-color:var(--ac);color:var(--ac2)}
+.pr{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tab{flex:1;padding:9px 4px;border-radius:var(--rs);border:.5px solid var(--bd);font-size:12px;font-weight:500;cursor:pointer;background:var(--sf);color:var(--tx3);font-family:'DM Sans',sans-serif}
+.tab.on{background:rgba(232,100,42,.2);border-color:var(--ac);color:var(--ac2)}
+.rc{background:var(--sf);border:.5px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:16px}
+.rbn{background:linear-gradient(135deg,var(--bg3),var(--bg4));padding:20px;border-bottom:.5px solid var(--bd)}
+.rbn h3{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;margin-bottom:6px}
+.rm{display:flex;gap:12px;flex-wrap:wrap}
+.rm span{font-size:11px;color:var(--tx3)}
+.rb{padding:16px 20px}
+.rs2{margin-bottom:14px}
+.rst{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ac);margin-bottom:8px}
+.il{list-style:none}
+.il li{display:flex;justify-content:space-between;padding:6px 0;border-bottom:.5px solid var(--bd);font-size:13px;color:var(--tx2)}
+.il li:last-child{border-bottom:none}
+.qty{color:var(--tx3);font-size:12px}
+.sl2{list-style:none}
+.sl2 li{display:flex;gap:12px;padding:8px 0;border-bottom:.5px solid var(--bd);font-size:13px;color:var(--tx2);line-height:1.6}
+.sl2 li:last-child{border-bottom:none}
+.sn2{min-width:22px;height:22px;border-radius:50%;border:.5px solid var(--bd2);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--ac);flex-shrink:0;margin-top:1px}
+.ng{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.ni{background:var(--bg3);border-radius:var(--rs);padding:10px;text-align:center}
+.nv{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--ac2)}
+.nl{font-size:10px;color:var(--tx3)}
+.ra{display:flex;gap:10px;margin-top:14px}
+.ra button{flex:1;justify-content:center}
+.oc{background:var(--sf);border:.5px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+.oh{padding:14px 18px;border-bottom:.5px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
+.ot{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400}
+.dot{width:8px;height:8px;border-radius:50%}
+.dot.on{background:var(--grn);box-shadow:0 0 8px var(--grn);animation:pulse 2s infinite}
+.dot.off{background:var(--tx3)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.obdy{padding:18px}
+.tdisp{text-align:center;margin-bottom:20px}
+.tcirc{width:130px;height:130px;border-radius:50%;border:2px solid var(--bd2);margin:0 auto 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 40% 40%,var(--bg3),var(--bg));position:relative}
+.tcirc::after{content:'';position:absolute;inset:6px;border-radius:50%;border:.5px solid var(--bd)}
+.tval{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;color:var(--ac2);line-height:1}
+.tunit{font-size:11px;color:var(--tx3)}
+input[type=range].osl{width:100%;-webkit-appearance:none;height:4px;border-radius:4px;background:var(--sf2);outline:none}
+input[type=range].osl::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--ac);cursor:pointer;border:2px solid var(--bg)}
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.mb{background:var(--bg3);border:.5px solid var(--bd);border-radius:var(--rs);padding:10px 6px;text-align:center;cursor:pointer}
+.mb.on{background:rgba(232,100,42,.15);border-color:var(--ac)}
+.mb .mi{font-size:18px;margin-bottom:4px}
+.mb .mn{font-size:10px;color:var(--tx3)}
+.mb.on .mn{color:var(--ac2)}
+.tms{display:flex;align-items:center;gap:12px}
+.tmd{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--ac3);flex:1;text-align:center}
+.tmb{width:36px;height:36px;border-radius:50%;border:.5px solid var(--bd2);background:none;color:var(--tx2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px}
+.bdgr{background:rgba(232,66,66,.1);color:var(--red);border:.5px solid rgba(232,66,66,.3);border-radius:var(--rs);padding:12px;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.bdgn{background:rgba(66,196,122,.1);color:var(--grn);border:.5px solid rgba(66,196,122,.3);border-radius:var(--rs);padding:12px;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.bdgn.on{background:rgba(66,196,122,.2)}
+.lc{background:var(--sf);border:.5px solid var(--bd);border-radius:var(--r);padding:14px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;margin-bottom:10px}
+.le{font-size:26px;flex-shrink:0;width:42px;height:42px;background:var(--bg3);border-radius:var(--rs);display:flex;align-items:center;justify-content:center}
+.li{flex:1;min-width:0}
+.ln{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--tx);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lm{font-size:11px;color:var(--tx3);display:flex;gap:10px}
+.lbg{font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(232,100,42,.1);color:var(--ac2);border:.5px solid var(--bd2);white-space:nowrap}
+.es{text-align:center;padding:50px 20px}
+.es .ei{font-size:44px;margin-bottom:10px}
+.es p{font-size:13px;color:var(--tx3);line-height:1.6}
+.sg{background:var(--sf);border:.5px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:12px}
+.si{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:.5px solid var(--bd);cursor:pointer}
+.si:last-child{border-bottom:none}
+.si:active{background:var(--sf2)}
+.sil{font-size:14px;color:var(--tx)}
+.siv{font-size:12px;color:var(--tx3)}
+.as{background:var(--sf);border:.5px solid var(--bd);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.al{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);margin-bottom:8px}
+.ai{width:100%;background:var(--bg3);border:.5px solid var(--bd);border-radius:var(--rs);padding:10px 12px;color:var(--tx);font-family:monospace;font-size:12px;outline:none}
+.ai:focus{border-color:var(--bd2)}
+.ai::placeholder{color:var(--tx3);font-family:'DM Sans',sans-serif}
+.ah{font-size:11px;color:var(--tx3);margin-top:6px;line-height:1.5}
+.ah a{color:var(--ac2);text-decoration:none}
+.ptabs{display:flex;gap:8px;margin-bottom:12px}
+.ptab{flex:1;text-align:center;padding:9px;border-radius:var(--rs);border:.5px solid var(--bd);font-size:13px;font-weight:500;cursor:pointer;color:var(--tx3);background:var(--bg3);font-family:'DM Sans',sans-serif}
+.ptab.on{background:rgba(232,100,42,.15);border-color:var(--ac);color:var(--ac2)}
+.panel{display:none}
+.panel.on{display:block}
+.tgl{position:relative;width:42px;height:24px}
+.tgl input{opacity:0;width:0;height:0}
+.tgls{position:absolute;inset:0;background:var(--bg4);border-radius:12px;cursor:pointer;border:.5px solid var(--bd)}
+.tgls::before{content:'';position:absolute;width:18px;height:18px;left:2px;top:2px;background:var(--tx3);border-radius:50%;transition:transform .2s,background .2s}
+.tgl input:checked + .tgls{background:rgba(232,100,42,.2);border-color:var(--ac)}
+.tgl input:checked + .tgls::before{transform:translateX(18px);background:var(--ac)}
+.ldo{position:fixed;inset:0;background:rgba(15,9,0,.92);z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;backdrop-filter:blur(8px)}
+.ldo.on{display:flex}
+.sp{width:44px;height:44px;border:2px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ldt{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--tx2)}
+.toast{position:fixed;top:calc(20px + var(--st));left:50%;transform:translateX(-50%) translateY(-80px);background:var(--bg3);border:.5px solid var(--bd2);border-radius:var(--rs);padding:10px 18px;font-size:13px;color:var(--tx);z-index:300;transition:transform .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;max-width:90vw;text-align:center}
+.toast.on{transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:rgba(66,196,122,.4);color:#42C47A}
+.toast.er{border-color:rgba(232,66,66,.4);color:#E84242}
+.mbd{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:150;display:none;backdrop-filter:blur(4px)}
+.mbd.on{display:block}
+.mod{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-radius:20px 20px 0 0;border-top:.5px solid var(--bd2);z-index:160;max-height:90vh;overflow-y:auto;padding:20px 20px calc(20px + var(--sb));display:none}
+.mod.on{display:block}
+.mh{width:36px;height:4px;background:var(--bd2);border-radius:2px;margin:0 auto 14px}
+.mc{position:absolute;top:20px;right:20px;background:var(--sf);border:.5px solid var(--bd);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx3);font-size:16px}
+.pad{padding:0 20px}
+.mt8{margin-top:8px}
+.mt12{margin-top:12px}
+.mt16{margin-top:16px}
+.muted{font-size:12px;color:var(--tx3)}
+</style>
+</head>
+<body>
+<div id="app">
+
+<div class="sc on" id="sc-home">
+<div style="padding-bottom:20px">
+  <div class="ph"><div class="bd"><span class="bdt"></span><h1>ChefSense</h1></div><p>Tu chef personal con IA</p></div>
+  <div class="hc">
+    <h2>Que cocinamos<br><em>hoy?</em></h2>
+    <p>Escribe o fotografia tus ingredientes y la IA genera 3 recetas: principal, rapida y postre.</p>
+    <button class="bp" onclick="goTo('scan')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      Escanear ingredientes
+    </button>
+  </div>
+  <div class="sr">
+    <div class="sc2"><div class="sn" id="st-r">0</div><div class="sl">Recetas</div></div>
+    <div class="sc2"><div class="sn" id="st-i">0</div><div class="sl">Ingredientes</div></div>
+    <div class="sc2"><div class="sn" id="st-c">0</div><div class="sl">Cocinadas</div></div>
+  </div>
+  <div class="pad mt8">
+    <div class="stit">Accesos rapidos</div>
+    <div class="qg">
+      <div class="qc" onclick="goTo('scan')"><div class="qi">📸</div><div class="qt">Escanear</div><div class="qs">Ingredientes</div></div>
+      <div class="qc" onclick="goTo('oven')"><div class="qi">🔥</div><div class="qt">Horno</div><div class="qs">Control smart</div></div>
+      <div class="qc" onclick="goTo('recipes')"><div class="qi">📖</div><div class="qt">Recetas</div><div class="qs">Guardadas</div></div>
+      <div class="qc" onclick="goTo('cfg')"><div class="qi">⚙️</div><div class="qt">Ajustes</div><div class="qs">API key</div></div>
+    </div>
+  </div>
+  <div class="pad mt16">
+    <div class="stit">Recientes</div>
+    <div id="home-recent"><div class="muted" style="text-align:center;padding:14px 0">Sin recetas aun.</div></div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="sc-scan">
+<div style="padding-bottom:20px">
+  <div class="ph"><h1>Escanear</h1><p>Fotografia o escribe tus ingredientes</p></div>
+  <div class="pad" style="margin-bottom:0">
+    <div class="stit">Analizar foto con IA externa</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px">
+      <a href="https://chat.openai.com" target="_blank" style="display:flex;align-items:center;gap:10px;background:var(--sf);border:.5px solid var(--bd);border-radius:var(--r);padding:14px;text-decoration:none">
+        <div style="width:32px;height:32px;border-radius:8px;background:#10a37f;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 18a8 8 0 110-16 8 8 0 010 16zm-1-11h2v6h-2zm0-4h2v2h-2z"/></svg>
+        </div>
+        <div><div style="font-size:13px;font-weight:500;color:var(--tx)">ChatGPT</div><div style="font-size:11px;color:var(--tx3)">Sube tu foto aqui</div></div>
+      </a>
+      <a href="https://gemini.google.com" target="_blank" style="display:flex;align-items:center;gap:10px;background:var(--sf);border:.5px solid var(--bd);border-radius:var(--r);padding:14px;text-decoration:none">
+        <div style="width:32px;height:32px;border-radius:8px;background:#4285f4;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 18a8 8 0 110-16 8 8 0 010 16zm-1-11h2v6h-2zm0-4h2v2h-2z"/></svg>
+        </div>
+        <div><div style="font-size:13px;font-weight:500;color:var(--tx)">Gemini</div><div style="font-size:11px;color:var(--tx3)">Sube tu foto aqui</div></div>
+      </a>
+    </div>
+    <div style="background:var(--bg3);border-radius:var(--rs);padding:10px 12px;margin-bottom:4px">
+      <p style="font-size:11px;color:var(--tx3);line-height:1.6">Sube una foto de tu nevera y pide: <span style="color:var(--ac2)">"Lista todos los ingredientes separados por comas"</span>. Luego pega el resultado abajo.</p>
+    </div>
+  </div>
+  <div class="pad">
+    <div class="cf" id="camframe" onclick="camClick()">
+      <video id="camvid" autoplay playsinline muted></video>
+      <canvas id="camcvs"></canvas>
+      <div id="camcorn" style="display:none;position:absolute;inset:0;pointer-events:none">
+        <div style="position:absolute;top:12px;left:12px;width:30px;height:30px;border-top:2px solid var(--ac);border-left:2px solid var(--ac);border-radius:4px 0 0 0"></div>
+        <div style="position:absolute;bottom:12px;right:12px;width:30px;height:30px;border-bottom:2px solid var(--ac);border-right:2px solid var(--ac);border-radius:0 0 4px 0"></div>
+      </div>
+      <div id="camph">
+        <div class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+        <p class="ch">Toca para <strong>activar camara</strong></p>
+      </div>
+    </div>
+    <div class="cc mt8" id="cambtns" style="display:none">
+      <button class="bp" onclick="camCapture()">Capturar</button>
+      <button class="bs" onclick="camStop()">Cancelar</button>
+    </div>
+    <div class="mt16">
+      <div class="muted" style="margin-bottom:6px">Ingredientes:</div>
+      <div class="dtg" id="dtags"></div>
+      <textarea class="ii" id="ing-input" placeholder="ej: pollo, tomates, ajo, cebolla..."></textarea>
+    </div>
+    <div class="mt12">
+      <div class="muted" style="margin-bottom:6px">Preferencias:</div>
+      <div class="pr">
+        <div class="pc" onclick="togPref(this)">Vegetariano</div>
+        <div class="pc" onclick="togPref(this)">Vegano</div>
+        <div class="pc" onclick="togPref(this)">Sin gluten</div>
+        <div class="pc" onclick="togPref(this)">Sin lactosa</div>
+        <div class="pc" onclick="togPref(this)">Bajo calorias</div>
+        <div class="pc" onclick="togPref(this)">Alto proteinas</div>
+      </div>
+    </div>
+    <div class="mt8">
+      <div class="muted" style="margin-bottom:6px">Tiempo:</div>
+      <div class="pr">
+        <div class="pc tc" onclick="selTime(this,'15 min')">15 min</div>
+        <div class="pc tc" onclick="selTime(this,'30 min')">30 min</div>
+        <div class="pc tc on" onclick="selTime(this,'45 min')">45 min</div>
+        <div class="pc tc" onclick="selTime(this,'1 hora+')">1 hora+</div>
+      </div>
+    </div>
+    <button class="bp mt16" style="width:100%;justify-content:center" onclick="genRecipes()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Generar 3 recetas con IA
+    </button>
+    <div id="res-area" style="display:none;margin-top:16px"></div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="sc-oven">
+<div style="padding-bottom:20px">
+  <div class="ph"><h1>Horno Smart</h1><p>Control inteligente</p></div>
+  <div class="pad">
+    <div class="oc">
+      <div class="oh">
+        <span class="ot">Estado</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span id="ovlbl" style="font-size:12px;color:#42C47A">Conectado</span>
+          <div class="dot on" id="ovdot"></div>
+        </div>
+      </div>
+      <div class="obdy">
+        <div class="tdisp">
+          <div class="tcirc"><div class="tval" id="ovtemp">22</div><div class="tunit">C actual</div></div>
+          <div style="font-size:12px;color:var(--tx3)">Objetivo: <span id="ovtgt">180</span>C</div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--tx3);margin-bottom:6px">
+            <span>Temperatura</span><span id="ovtgtlbl" style="color:var(--ac2);font-weight:500">180C</span>
+          </div>
+          <input type="range" class="osl" id="ovsl" min="50" max="300" value="180" step="5" oninput="setTemp(this.value)">
+        </div>
+        <div class="stit mt12">Modo</div>
+        <div class="mg">
+          <div class="mb on" onclick="setMode(this)"><div class="mi">🌀</div><div class="mn">Conveccion</div></div>
+          <div class="mb" onclick="setMode(this)"><div class="mi">🔥</div><div class="mn">Grill</div></div>
+          <div class="mb" onclick="setMode(this)"><div class="mi">🍕</div><div class="mn">Pizza</div></div>
+          <div class="mb" onclick="setMode(this)"><div class="mi">🍞</div><div class="mn">Pan</div></div>
+          <div class="mb" onclick="setMode(this)"><div class="mi">💨</div><div class="mn">Vapor</div></div>
+          <div class="mb" onclick="setMode(this)"><div class="mi">❄️</div><div class="mn">Descongelar</div></div>
+        </div>
+        <div class="stit">Temporizador</div>
+        <div class="tms">
+          <button class="tmb" onclick="adjTimer(-5)">-</button>
+          <div class="tmd" id="timdisp">30:00</div>
+          <button class="tmb" onclick="adjTimer(5)">+</button>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:14px">
+          <button class="bdgn" id="ovbtn" onclick="togOven()" style="flex:1;justify-content:center">Iniciar</button>
+          <button class="bdgr" onclick="stopOven()" style="flex:1;justify-content:center">Apagar</button>
+        </div>
+      </div>
+    </div>
+    <div class="oc">
+      <div class="oh"><span class="ot">Consejo de IA</span></div>
+      <div class="obdy">
+        <div id="ovai" style="font-size:13px;color:var(--tx2);line-height:1.7">Carga una receta o pide consejo.</div>
+        <button class="bs mt12" style="width:100%;justify-content:center" onclick="askOven()">Pedir consejo</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="sc-recipes">
+<div style="padding-bottom:20px">
+  <div class="ph"><h1>Mis recetas</h1><p>Guardadas y generadas por IA</p></div>
+  <div class="pad"><div id="rlist"></div></div>
+</div>
+</div>
+
+<div class="sc" id="sc-cfg">
+<div style="padding-bottom:20px">
+  <div class="ph"><h1>Ajustes</h1><p>Configura tu proveedor de IA</p></div>
+  <div class="pad">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+      <div style="width:52px;height:52px;border-radius:50%;background:var(--sf2);border:.5px solid var(--bd2);display:flex;align-items:center;justify-content:center;font-size:22px">👨‍🍳</div>
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:20px">Mi Cocina</div>
+        <div style="font-size:12px;color:var(--tx3)">ChefSense AI v1.0</div>
+      </div>
+    </div>
+    <div class="as">
+      <div class="al">Proveedor de IA</div>
+      <div class="ptabs">
+        <div class="ptab on" id="ptab-groq" onclick="selProv('groq')">Groq</div>
+        <div class="ptab" id="ptab-openrouter" onclick="selProv('openrouter')">OpenRouter</div>
+      </div>
+      <div class="panel on" id="pan-groq">
+        <div class="al">API Key de Groq</div>
+        <input type="password" class="ai" id="groq-key" placeholder="gsk_...">
+        <p class="ah">Gratis en <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a></p>
+        <div class="al" style="margin-top:12px">Modelo</div>
+        <select class="ai" id="groq-model" style="cursor:pointer">
+          <option value="meta-llama/llama-4-scout-17b-16e-instruct">Llama 4 Scout 17B (recomendado)</option>
+          <option value="llama-3.3-70b-versatile">Llama 3.3 70B</option>
+          <option value="llama-3.1-8b-instant">Llama 3.1 8B (rapido)</option>
+          <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
+          <option value="gemma2-9b-it">Gemma 2 9B</option>
+        </select>
+      </div>
+      <div class="panel" id="pan-openrouter">
+        <div class="al">API Key de OpenRouter</div>
+        <input type="password" class="ai" id="or-key" placeholder="sk-or-v1-...">
+        <p class="ah">Gratis en <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a></p>
+        <div class="al" style="margin-top:12px">Modelo</div>
+        <select class="ai" id="or-model" style="cursor:pointer">
+          <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash (gratis)</option>
+          <option value="meta-llama/llama-3.3-70b-instruct:free">Llama 3.3 70B (gratis)</option>
+          <option value="deepseek/deepseek-chat-v3-0324:free">DeepSeek V3 (gratis)</option>
+          <option value="mistralai/mistral-7b-instruct:free">Mistral 7B (gratis)</option>
+          <option value="qwen/qwen-2.5-72b-instruct:free">Qwen 2.5 72B (gratis)</option>
+          <option value="anthropic/claude-sonnet-4">Claude Sonnet 4 (pago)</option>
+          <option value="openai/gpt-4o-mini">GPT-4o Mini (pago)</option>
+        </select>
+      </div>
+      <div id="provstatus" style="display:none;font-size:12px;padding:8px 10px;border-radius:var(--rs);margin-top:8px"></div>
+      <button class="bp mt12" style="width:100%;justify-content:center" onclick="saveKey()">Guardar configuracion</button>
+      <button class="bs mt8" style="width:100%;justify-content:center" onclick="testConn()">Probar conexion</button>
+    </div>
+    <div class="stit">Horno</div>
+    <div class="sg">
+      <div class="si"><span class="sil">Conexion WiFi</span><label class="tgl"><input type="checkbox" checked onchange="togWifi(this)"><span class="tgls"></span></label></div>
+      <div class="si"><span class="sil">Precalentamiento auto</span><label class="tgl"><input type="checkbox"><span class="tgls"></span></label></div>
+    </div>
+    <div class="stit">Datos</div>
+    <div class="sg">
+      <div class="si" onclick="expRecipes()"><span class="sil">Exportar recetas</span><span class="siv">JSON</span></div>
+      <div class="si" onclick="clearAll()"><span class="sil" style="color:var(--red)">Borrar todos los datos</span></div>
+    </div>
+    <p class="muted" style="text-align:center;margin-top:20px">ChefSense AI v1.0 - Sin anuncios - Groq y OpenRouter</p>
+  </div>
+</div>
+</div>
+
+<nav>
+  <button class="nb on" id="nb-home" onclick="goTo('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Inicio</span>
+  </button>
+  <button class="nb" id="nb-scan" onclick="goTo('scan')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+    <span>Escanear</span>
+  </button>
+  <button class="nb" id="nb-oven" onclick="goTo('oven')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M2 9h20"/><circle cx="8" cy="6" r="1" fill="currentColor"/><circle cx="12" cy="6" r="1" fill="currentColor"/></svg>
+    <span>Horno</span>
+  </button>
+  <button class="nb" id="nb-recipes" onclick="goTo('recipes')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+    <span>Recetas</span>
+  </button>
+  <button class="nb" id="nb-cfg" onclick="goTo('cfg')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    <span>Ajustes</span>
+  </button>
+</nav>
+</div>
+
+<div class="ldo" id="loader"><div class="sp"></div><div class="ldt" id="ldtxt">Cargando...</div></div>
+<div class="toast" id="toast"></div>
+<div class="mbd" id="mbd" onclick="closeModal()"></div>
+<div class="mod" id="mod"><div class="mh"></div><span class="mc" onclick="closeModal()">x</span><div id="modcnt"></div></div>
+
+<script>
+var D = {
+  recipes: JSON.parse(localStorage.getItem('cs_r') || '[]'),
+  stats: JSON.parse(localStorage.getItem('cs_s') || '{"r":0,"i":0,"c":0}'),
+  prov: localStorage.getItem('cs_prov') || 'groq',
+  gk: localStorage.getItem('cs_gk') || '',
+  gm: localStorage.getItem('cs_gm') || 'meta-llama/llama-4-scout-17b-16e-instruct',
+  ok: localStorage.getItem('cs_ok') || '',
+  om: localStorage.getItem('cs_om') || 'google/gemini-2.0-flash-exp:free',
+  t: '45 min',
+  tmin: 30, tsec: 0,
+  ovenOn: false, ovenIv: null,
+  cam: null,
+  curRecipes: [],
+  ings: []
+};
+
+function aiUrl() { return D.prov === 'groq' ? 'https://api.groq.com/openai/v1/chat/completions' : 'https://openrouter.ai/api/v1/chat/completions'; }
+function aiKey() { return D.prov === 'groq' ? D.gk : D.ok; }
+function aiModel() { return D.prov === 'groq' ? D.gm : D.om; }
+function aiHeaders() {
+  var h = {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + aiKey()};
+  if (D.prov === 'openrouter') { h['HTTP-Referer'] = location.origin; h['X-Title'] = 'ChefSense AI'; }
+  return h;
+}
+
+async function callAI(msgs, tok) {
+  var r = await fetch(aiUrl(), {method:'POST', headers:aiHeaders(), body:JSON.stringify({model:aiModel(), messages:msgs, max_tokens:tok||1500, temperature:0.7})});
+  if (!r.ok) { var e = await r.json().catch(function(){return {};}); throw new Error((e.error && e.error.message) || 'HTTP ' + r.status); }
+  var d = await r.json();
+  return d.choices && d.choices[0] && d.choices[0].message ? d.choices[0].message.content : '';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(function(){});
+  selProv(D.prov);
+  document.getElementById('groq-key').value = D.gk;
+  document.getElementById('or-key').value = D.ok;
+  document.getElementById('groq-model').value = D.gm;
+  document.getElementById('or-model').value = D.om;
+  updStats(); renderList(); renderRecent();
+});
+
+function goTo(tab) {
+  document.querySelectorAll('.sc').forEach(function(s) { s.classList.remove('on'); });
+  document.querySelectorAll('.nb').forEach(function(b) { b.classList.remove('on'); });
+  document.getElementById('sc-' + tab).classList.add('on');
+  document.getElementById('nb-' + tab).classList.add('on');
+  if (tab !== 'scan' && D.cam) camStop();
+}
+
+function camClick() { if (!document.getElementById('camframe').classList.contains('on')) camStart(); }
+async function camStart() {
+  try {
+    var s = await navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment'}});
+    D.cam = s;
+    document.getElementById('camvid').srcObject = s;
+    document.getElementById('camframe').classList.add('on');
+    document.getElementById('camph').style.display = 'none';
+    document.getElementById('cambtns').style.display = 'flex';
+    document.getElementById('camcorn').style.display = 'block';
+  } catch(e) { toast(e.name === 'NotAllowedError' ? 'Activa permiso de camara' : 'Camara no disponible', 'er'); }
+}
+function camCapture() {
+  var v = document.getElementById('camvid'), c = document.getElementById('camcvs');
+  c.width = v.videoWidth || 640; c.height = v.videoHeight || 480;
+  c.getContext('2d').drawImage(v, 0, 0);
+  camStop();
+  analyzeImg(c.toDataURL('image/jpeg', 0.8));
+}
+function camStop() {
+  if (D.cam) { D.cam.getTracks().forEach(function(t) { t.stop(); }); D.cam = null; }
+  document.getElementById('camframe').classList.remove('on');
+  document.getElementById('camph').style.display = 'flex';
+  document.getElementById('cambtns').style.display = 'none';
+  document.getElementById('camcorn').style.display = 'none';
+  document.getElementById('camvid').srcObject = null;
+}
+async function analyzeImg(img) {
+  if (!checkKey()) return;
+  if (D.prov === 'groq') { toast('Groq no soporta vision. Usa OpenRouter.', 'er'); return; }
+  load('Analizando imagen...');
+  try {
+    var b64 = img.split(',')[1];
+    var txt = await callAI([{role:'user', content:[{type:'image_url', image_url:{url:'data:image/jpeg;base64,' + b64}}, {type:'text', text:'Lista ingredientes alimentarios visibles. Solo array JSON strings en espanol. Ej: ["tomate","cebolla"]'}]}], 400);
+    txt = txt.replace(/```json|```/g,'').trim();
+    var m = txt.match(/\[[\s\S]*\]/);
+    var arr = JSON.parse(m ? m[0] : txt);
+    D.ings = D.ings.concat(arr);
+    renderTags();
+    toast(arr.length + ' ingredientes detectados', 'ok');
+    updStat('i', D.stats.i + arr.length);
+  } catch(e) { toast('Error: ' + e.message, 'er'); }
+  unload();
+}
+
+function renderTags() {
+  document.getElementById('dtags').innerHTML = D.ings.map(function(t, i) {
+    return '<div class="tg">' + t + '<span class="tx" onclick="rmTag(' + i + ')">x</span></div>';
+  }).join('');
+}
+function rmTag(i) { D.ings.splice(i, 1); renderTags(); }
+
+async function genRecipes() {
+  if (!checkKey()) return;
+  var manual = document.getElementById('ing-input').value.trim();
+  var all = D.ings.concat(manual ? manual.split(/[,\n]/).map(function(s){return s.trim();}).filter(Boolean) : []);
+  if (!all.length) { toast('Anade al menos un ingrediente', 'er'); return; }
+  var prefs = Array.from(document.querySelectorAll('.pc.on:not(.tc)')).map(function(e){return e.textContent;}).join(', ');
+  var styles = ['mediterranea','asiatica','mexicana','italiana','francesa','fusion','tradicional española','griega','japonesa','india'];
+  var style = styles[Math.floor(Math.random() * styles.length)];
+  var variations = ['diferente a lo habitual','original e inesperada','con una tecnica especial','con presentacion creativa','con un toque de sabor unico'];
+  var variation = variations[Math.floor(Math.random() * variations.length)];
+  var prompt = 'Eres un chef creativo. Ingredientes disponibles: ' + all.join(', ') + '.'
+    + (prefs ? ' IMPORTANTE - restricciones obligatorias: ' + prefs + '. Todas las recetas deben cumplirlas.' : '')
+    + ' Tiempo maximo: ' + D.t + '. Cocina de inspiracion: ' + style + '. Estilo: ' + variation + '.'
+    + ' Genera 3 recetas MUY DISTINTAS entre si en espanol: 1 plato principal, 1 opcion rapida/ligera, 1 postre o dulce.'
+    + ' Sé creativo, no uses siempre los mismos platos tipicos. Usa combinaciones originales.'
+    + ' SOLO array JSON 3 elementos sin texto extra:'
+    + ' [{"nombre":"...","emoji":"...","descripcion":"...","categoria":"Principal","tiempo_prep":"15 min","tiempo_coccion":"20 min","porciones":2,"dificultad":"Facil","ingredientes":[{"nombre":"...","cantidad":"..."}],"pasos":["paso 1","paso 2","paso 3"],"nutricion":{"calorias":400,"proteinas":25,"carbohidratos":40,"grasas":12},"horno":{"necesario":false,"temperatura":180,"modo":"conveccion","tiempo_min":20},"consejo":"..."},{"categoria":"Rapida",...},{"categoria":"Postre",...}]';
+  load('Generando 3 recetas...');
+  try {
+    var txt = await callAI([{role:'user', content:prompt}], 4000);
+    txt = txt.replace(/```json|```/g,'').trim();
+    var m = txt.match(/\[[\s\S]*\]/);
+    var arr = JSON.parse(m ? m[0] : txt);
+    if (!Array.isArray(arr)) arr = [arr];
+    var now = Date.now();
+    arr.forEach(function(r, i) { r.id = now + i; r.fecha = new Date().toLocaleDateString('es-ES'); });
+    D.curRecipes = arr;
+    renderTabs(arr);
+  } catch(e) { toast('Error: ' + e.message, 'er'); }
+  unload();
+}
+
+function renderTabs(recipes) {
+  var el = document.getElementById('res-area');
+  el.style.display = 'block';
+  var catC = {Principal:'#F59240', Rapida:'#42C47A', Postre:'#C9952A'};
+  var catB = {Principal:'rgba(232,100,42,0.15)', Rapida:'rgba(66,196,122,0.15)', Postre:'rgba(201,149,42,0.15)'};
+  var h = '<div class="tabs">';
+  recipes.forEach(function(r, i) {
+    var cat = r.categoria || ('Opcion ' + (i+1));
+    h += '<button class="tab' + (i===0?' on':'') + '" id="tab-' + i + '" onclick="showTab(' + i + ')">' + cat + '</button>';
+  });
+  h += '</div>';
+  recipes.forEach(function(r, i) {
+    var cat = r.categoria || 'Principal';
+    var col = catC[cat] || '#F59240';
+    var bg = catB[cat] || 'rgba(232,100,42,0.15)';
+    h += '<div id="pan-' + i + '" style="display:' + (i===0?'block':'none') + '">';
+    h += '<div class="rc"><div class="rbn">';
+    h += '<span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;background:' + bg + ';color:' + col + ';margin-bottom:8px">' + cat + '</span>';
+    h += '<h3>' + (r.emoji||'') + ' ' + r.nombre + '</h3>';
+    h += '<p style="font-size:13px;color:var(--tx3);margin-bottom:8px">' + r.descripcion + '</p>';
+    h += '<div class="rm"><span>' + r.tiempo_prep + ' prep</span><span>' + r.tiempo_coccion + '</span><span>' + r.porciones + ' pax</span><span>' + r.dificultad + '</span></div>';
+    h += '</div><div class="rb">';
+    h += '<div class="rs2"><div class="rst">Ingredientes</div><ul class="il">';
+    r.ingredientes.forEach(function(ing) { h += '<li><span>' + ing.nombre + '</span><span class="qty">' + ing.cantidad + '</span></li>'; });
+    h += '</ul></div>';
+    h += '<div class="rs2"><div class="rst">Preparacion</div><ol class="sl2">';
+    r.pasos.forEach(function(p, pi) { h += '<li><span class="sn2">' + (pi+1) + '</span><span>' + p + '</span></li>'; });
+    h += '</ol></div>';
+    h += '<div class="rs2"><div class="rst">Nutricion</div><div class="ng">';
+    h += '<div class="ni"><div class="nv">' + r.nutricion.calorias + '</div><div class="nl">kcal</div></div>';
+    h += '<div class="ni"><div class="nv">' + r.nutricion.proteinas + 'g</div><div class="nl">Proteinas</div></div>';
+    h += '<div class="ni"><div class="nv">' + r.nutricion.carbohidratos + 'g</div><div class="nl">Carbos</div></div>';
+    h += '<div class="ni"><div class="nv">' + r.nutricion.grasas + 'g</div><div class="nl">Grasas</div></div>';
+    h += '</div></div>';
+    if (r.consejo) h += '<div style="background:var(--bg3);border-radius:var(--rs);padding:12px;border-left:2px solid var(--ac);margin-top:8px"><div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);margin-bottom:4px">Consejo</div><div style="font-size:13px;color:var(--tx2);line-height:1.6">' + r.consejo + '</div></div>';
+    h += '<div class="ra">';
+    h += '<button class="bp" id="savebtn-' + i + '">Guardar</button>';
+    if (r.horno && r.horno.necesario) h += '<button class="bs" id="ovenbtn-' + i + '">Al horno</button>';
+    h += '</div></div></div></div>';
+  });
+  el.innerHTML = h;
+  recipes.forEach(function(r, i) {
+    var sb = document.getElementById('savebtn-' + i);
+    if (sb) sb.addEventListener('click', function() { saveIdx(i); });
+    var ob = document.getElementById('ovenbtn-' + i);
+    if (ob) ob.addEventListener('click', function() { if (r.horno) toOven(r.horno); });
+  });
+  el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function showTab(idx) {
+  document.querySelectorAll('[id^="pan-"]').forEach(function(p) { p.style.display = 'none'; });
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('on'); });
+  var p = document.getElementById('pan-' + idx);
+  var t = document.getElementById('tab-' + idx);
+  if (p) p.style.display = 'block';
+  if (t) t.classList.add('on');
+}
+
+function saveIdx(idx) {
+  var r = D.curRecipes[idx];
+  if (!r) return;
+  if (D.recipes.find(function(x) { return x.id === r.id; })) { toast('Ya guardada', 'er'); return; }
+  D.recipes.unshift(r);
+  localStorage.setItem('cs_r', JSON.stringify(D.recipes));
+  renderList(); renderRecent();
+  toast('Receta guardada', 'ok');
+}
+
+function toOven(d) {
+  document.getElementById('ovsl').value = d.temperatura;
+  setTemp(d.temperatura);
+  D.tmin = d.tiempo_min || 30; D.tsec = 0;
+  updTimer();
+  document.getElementById('ovai').textContent = 'Configurado: ' + d.temperatura + 'C, modo ' + d.modo + ', ' + d.tiempo_min + ' min.';
+  goTo('oven');
+  toast('Horno configurado', 'ok');
+}
+
+var ovTemp = 22, ovTgt = 180, ovIv = null;
+function setTemp(v) { ovTgt = parseInt(v); document.getElementById('ovtgtlbl').textContent = v + 'C'; document.getElementById('ovtgt').textContent = v; }
+function setMode(el) { document.querySelectorAll('.mb').forEach(function(b) { b.classList.remove('on'); }); el.classList.add('on'); }
+function adjTimer(m) { D.tmin = Math.max(1, Math.min(180, D.tmin + m)); updTimer(); }
+function updTimer() { document.getElementById('timdisp').textContent = String(D.tmin).padStart(2,'0') + ':' + String(D.tsec).padStart(2,'0'); }
+function togOven() { if (!D.ovenOn) startOven(); else pauseOven(); }
+function startOven() {
+  D.ovenOn = true;
+  document.getElementById('ovbtn').textContent = 'Pausar';
+  document.getElementById('ovbtn').classList.add('on');
+  ovIv = setInterval(function() {
+    if (ovTemp < ovTgt) ovTemp = Math.min(ovTgt, ovTemp + 2);
+    else if (ovTemp > ovTgt) ovTemp = Math.max(ovTgt, ovTemp - 2);
+    document.getElementById('ovtemp').textContent = Math.round(ovTemp);
+    if (D.tsec > 0) D.tsec--;
+    else if (D.tmin > 0) { D.tmin--; D.tsec = 59; }
+    else { stopOven(); toast('Tiempo completado!', 'ok'); }
+    updTimer();
+  }, 1000);
+  toast('Horno iniciado', 'ok');
+}
+function pauseOven() { D.ovenOn = false; clearInterval(ovIv); document.getElementById('ovbtn').textContent = 'Iniciar'; document.getElementById('ovbtn').classList.remove('on'); }
+function stopOven() { pauseOven(); ovTemp = 22; document.getElementById('ovtemp').textContent = '22'; toast('Horno apagado'); }
+async function askOven() {
+  if (!checkKey()) return;
+  var mode = (document.querySelector('.mb.on .mn') || {}).textContent || 'conveccion';
+  var temp = document.getElementById('ovtgtlbl').textContent;
+  load('Consultando IA...');
+  try {
+    var txt = await callAI([{role:'user', content:'Chef pro. 3 frases sobre horno a ' + temp + ' modo ' + mode + '. Que cocinar y un truco.'}], 250);
+    document.getElementById('ovai').textContent = txt;
+  } catch(e) { toast('Error: ' + e.message, 'er'); }
+  unload();
+}
+
+function renderList() {
+  var el = document.getElementById('rlist');
+  if (!D.recipes.length) { el.innerHTML = '<div class="es"><div class="ei">🍽️</div><p>Sin recetas aun.<br>Escanea ingredientes!</p></div>'; return; }
+  el.innerHTML = D.recipes.map(function(r) {
+    return '<div class="lc" onclick="openMod(' + r.id + ')">'
+      + '<div class="le">' + (r.emoji||'🍽️') + '</div>'
+      + '<div class="li"><div class="ln">' + r.nombre + '</div>'
+      + '<div class="lm"><span>' + r.tiempo_prep + '</span><span>' + r.porciones + ' pax</span><span>' + (r.fecha||'') + '</span></div></div>'
+      + '<span class="lbg">' + r.dificultad + '</span></div>';
+  }).join('');
+}
+
+function renderRecent() {
+  var el = document.getElementById('home-recent');
+  var rec = D.recipes.slice(0, 3);
+  if (!rec.length) { el.innerHTML = '<div class="muted" style="text-align:center;padding:14px 0">Sin recetas aun.</div>'; return; }
+  el.innerHTML = rec.map(function(r) {
+    return '<div class="lc" onclick="openMod(' + r.id + ')">'
+      + '<div class="le">' + (r.emoji||'🍽️') + '</div>'
+      + '<div class="li"><div class="ln">' + r.nombre + '</div>'
+      + '<div class="lm"><span>' + r.tiempo_prep + '</span><span>' + r.nutricion.calorias + ' kcal</span></div></div></div>';
+  }).join('');
+}
+
+function openMod(id) {
+  var r = D.recipes.find(function(x) { return x.id === id; });
+  if (!r) return;
+  var h = '<h2 style="font-family:\'Cormorant Garamond\',serif;font-size:24px;font-weight:400;margin-bottom:6px">' + (r.emoji||'') + ' ' + r.nombre + '</h2>';
+  h += '<p style="font-size:13px;color:var(--tx3);margin-bottom:14px">' + r.descripcion + '</p>';
+  h += '<div class="rm" style="margin-bottom:14px"><span>' + r.tiempo_prep + '</span><span>' + r.tiempo_coccion + '</span><span>' + r.porciones + ' pax</span></div>';
+  h += '<div class="rs2"><div class="rst">Ingredientes</div><ul class="il">';
+  r.ingredientes.forEach(function(i) { h += '<li><span>' + i.nombre + '</span><span class="qty">' + i.cantidad + '</span></li>'; });
+  h += '</ul></div><div class="rs2"><div class="rst">Preparacion</div><ol class="sl2">';
+  r.pasos.forEach(function(p, i) { h += '<li><span class="sn2">' + (i+1) + '</span><span>' + p + '</span></li>'; });
+  h += '</ol></div><div class="ng" style="margin-top:12px">';
+  h += '<div class="ni"><div class="nv">' + r.nutricion.calorias + '</div><div class="nl">kcal</div></div>';
+  h += '<div class="ni"><div class="nv">' + r.nutricion.proteinas + 'g</div><div class="nl">Proteinas</div></div>';
+  h += '<div class="ni"><div class="nv">' + r.nutricion.carbohidratos + 'g</div><div class="nl">Carbos</div></div>';
+  h += '<div class="ni"><div class="nv">' + r.nutricion.grasas + 'g</div><div class="nl">Grasas</div></div>';
+  h += '</div>';
+  document.getElementById('modcnt').innerHTML = h;
+  if (r.horno && r.horno.necesario) {
+    var ob = document.createElement('button');
+    ob.className = 'bs mt12'; ob.style.cssText = 'width:100%;justify-content:center';
+    ob.textContent = 'Configurar horno';
+    ob.addEventListener('click', function() { toOven(r.horno); closeModal(); });
+    document.getElementById('modcnt').appendChild(ob);
+  }
+  var db = document.createElement('button');
+  db.className = 'bdgr mt12'; db.style.cssText = 'width:100%;justify-content:center';
+  db.textContent = 'Eliminar receta';
+  db.addEventListener('click', function() { delRecipe(id); closeModal(); });
+  document.getElementById('modcnt').appendChild(db);
+  document.getElementById('mbd').classList.add('on');
+  document.getElementById('mod').classList.add('on');
+}
+function closeModal() { document.getElementById('mbd').classList.remove('on'); document.getElementById('mod').classList.remove('on'); }
+function delRecipe(id) {
+  D.recipes = D.recipes.filter(function(r) { return r.id !== id; });
+  localStorage.setItem('cs_r', JSON.stringify(D.recipes));
+  renderList(); renderRecent(); updStat('r', D.recipes.length);
+  toast('Receta eliminada');
+}
+
+function togPref(el) { if (!el.classList.contains('tc')) el.classList.toggle('on'); }
+function selTime(el, t) { document.querySelectorAll('.tc').forEach(function(c) { c.classList.remove('on'); }); el.classList.add('on'); D.t = t; }
+
+function selProv(name) {
+  D.prov = name;
+  document.querySelectorAll('.ptab').forEach(function(t) { t.classList.remove('on'); });
+  document.getElementById('ptab-' + name).classList.add('on');
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('on'); });
+  document.getElementById('pan-' + name).classList.add('on');
+  document.getElementById('provstatus').style.display = 'none';
+}
+
+function saveKey() {
+  D.gk = document.getElementById('groq-key').value.trim();
+  D.ok = document.getElementById('or-key').value.trim();
+  D.gm = document.getElementById('groq-model').value;
+  D.om = document.getElementById('or-model').value;
+  var k = D.prov === 'groq' ? D.gk : D.ok;
+  if (!k) { toast('Introduce una API key', 'er'); return; }
+  localStorage.setItem('cs_prov', D.prov); localStorage.setItem('cs_gk', D.gk);
+  localStorage.setItem('cs_ok', D.ok); localStorage.setItem('cs_gm', D.gm); localStorage.setItem('cs_om', D.om);
+  toast('Configuracion guardada', 'ok');
+}
+
+async function testConn() {
+  if (!checkKey()) return;
+  load('Probando...');
+  var sm = document.getElementById('provstatus');
+  try {
+    await callAI([{role:'user', content:'Di solo: OK'}], 10);
+    unload();
+    sm.style.cssText = 'display:block;background:rgba(66,196,122,.1);color:#42C47A;border:.5px solid rgba(66,196,122,.3);border-radius:8px;padding:8px 10px;font-size:12px;margin-top:8px';
+    sm.textContent = 'Conexion OK - ' + aiModel();
+  } catch(e) {
+    unload();
+    sm.style.cssText = 'display:block;background:rgba(232,66,66,.1);color:#E84242;border:.5px solid rgba(232,66,66,.3);border-radius:8px;padding:8px 10px;font-size:12px;margin-top:8px';
+    sm.textContent = 'Error: ' + e.message;
+  }
+}
+
+function togWifi(el) {
+  var d = document.getElementById('ovdot'), l = document.getElementById('ovlbl');
+  if (el.checked) { d.className = 'dot on'; l.style.color = '#42C47A'; l.textContent = 'Conectado'; }
+  else { d.className = 'dot off'; l.style.color = '#8A7558'; l.textContent = 'Desconectado'; }
+}
+
+function expRecipes() {
+  if (!D.recipes.length) { toast('No hay recetas', 'er'); return; }
+  var b = new Blob([JSON.stringify(D.recipes, null, 2)], {type:'application/json'});
+  var u = URL.createObjectURL(b), a = document.createElement('a');
+  a.href = u; a.download = 'chefsense.json'; a.click(); URL.revokeObjectURL(u);
+  toast('Exportado', 'ok');
+}
+function clearAll() {
+  if (!confirm('Borrar todos los datos?')) return;
+  localStorage.clear(); D.recipes = []; D.stats = {r:0,i:0,c:0}; D.gk = ''; D.ok = '';
+  document.getElementById('groq-key').value = ''; document.getElementById('or-key').value = '';
+  renderList(); renderRecent(); updStats(); toast('Datos borrados');
+}
+
+function updStat(k, v) { D.stats[k] = v; localStorage.setItem('cs_s', JSON.stringify(D.stats)); updStats(); }
+function updStats() { document.getElementById('st-r').textContent = D.recipes.length; document.getElementById('st-i').textContent = D.stats.i; document.getElementById('st-c').textContent = D.stats.c; }
+
+function checkKey() {
+  var k = D.prov === 'groq' ? D.gk : D.ok;
+  if (!k) { toast('Anade tu API key en Ajustes', 'er'); setTimeout(function() { goTo('cfg'); }, 1200); return false; }
+  return true;
+}
+function load(t) { document.getElementById('ldtxt').textContent = t || 'Cargando...'; document.getElementById('loader').classList.add('on'); }
+function unload() { document.getElementById('loader').classList.remove('on'); }
+var toastT;
+function toast(msg, type) {
+  var el = document.getElementById('toast');
+  el.textContent = msg; el.className = 'toast ' + (type||'') + ' on';
+  clearTimeout(toastT); toastT = setTimeout(function() { el.classList.remove('on'); }, 2800);
+}
+</script>
+</body>
+</html>
